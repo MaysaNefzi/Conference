@@ -8,12 +8,18 @@ package Admin;
 
 import conferance.manager.ConnecterBD;
 import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.sql.PreparedStatement;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  *
@@ -22,12 +28,16 @@ import javax.swing.JTextField;
 public class AddConf extends javax.swing.JFrame {
      ConnecterBD cnx = new ConnecterBD();
      Statement stmt;
+     
 
     /**
      * Creates new form AddConf
      */
-    public AddConf() {
+    public AddConf() throws SQLException {
         initComponents();
+        theme();
+        comitesc();
+        comiteor();
     }
 
     /**
@@ -55,16 +65,16 @@ public class AddConf extends javax.swing.JFrame {
         txt_pays = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        cmb_sc = new javax.swing.JComboBox();
+        cmb_or = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txt_frais = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        date_conf = new com.toedter.calendar.JDateChooser();
         soumission = new com.toedter.calendar.JDateChooser();
-        jDateChooser3 = new com.toedter.calendar.JDateChooser();
+        inscription = new com.toedter.calendar.JDateChooser();
         jLabel10 = new javax.swing.JLabel();
         txt_code = new javax.swing.JTextField();
 
@@ -135,9 +145,9 @@ public class AddConf extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Date limite d'inscription");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_sc.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_or.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,7 +165,11 @@ public class AddConf extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Ville");
 
+        date_conf.setDateFormatString("dd-MM-yyyy");
+
         soumission.setDateFormatString("dd-MM-yyyy");
+
+        inscription.setDateFormatString("dd-MM-YYYY");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
@@ -195,14 +209,14 @@ public class AddConf extends javax.swing.JFrame {
                             .addComponent(txt_code)
                             .addComponent(txt_titre)
                             .addComponent(txt_loc)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmb_sc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmb_or, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txt_ville)
                             .addComponent(txt_pays)
                             .addComponent(cmb_theme, 0, 253, Short.MAX_VALUE)
                             .addComponent(txt_frais, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jDateChooser3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(date_conf, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inscription, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(soumission, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(67, 67, 67))
         );
@@ -224,7 +238,7 @@ public class AddConf extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(date_conf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_loc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -240,18 +254,18 @@ public class AddConf extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inscription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
                     .addComponent(soumission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_sc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_or, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,7 +289,7 @@ public class AddConf extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 10, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,12 +310,41 @@ public class AddConf extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Date d_soumission=new Date(soumission.getDate().getTime()); 
-        String addConf="INSERT INTO conference (code,titre,local,ville,pays,frais,d_soumission) VALUES('"+txt_code.getText()+"','"+txt_titre.getText()+"','"+txt_loc.getText()+"','"+txt_ville.getText()+"','"+txt_pays.getText()+"','"+txt_frais.getText()+"',"+d_soumission+")";
+
+        String addConf="INSERT INTO conference (code,titre,local,ville,pays,frais,d_soumission,date_conf,d_paiment,theme,c_or,c_sc) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try
-        {
-            stmt=cnx.ObtenirCnx().createStatement();
-            stmt.executeQuery(addConf);
+        {   
+            String urlPilote="oracle.jdbc.driver.OracleDriver";
+            String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+            String th_choisi=(String) cmb_theme.getSelectedItem();
+            String sc_choisi=(String)cmb_sc.getSelectedItem();
+            String or_choisi=(String) cmb_or.getSelectedItem();
+            Date dt_soum = new Date(soumission.getDate().getTime());
+            Date dt_conf = new Date(date_conf.getDate().getTime());
+            Date dt_insc = new Date(inscription.getDate().getTime());
+            try {
+                Class.forName(urlPilote);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Connection con = DriverManager.getConnection(urlBD);
+            
+            PreparedStatement ps = con.prepareStatement(addConf);
+            ps.setString(1,txt_code.getText() );
+            ps.setString(2, txt_titre.getText());
+            ps.setString(3,txt_loc.getText());
+            ps.setString(4,txt_ville.getText() );
+            ps.setString(5,txt_pays.getText());
+            ps.setString(6,txt_frais.getText() );
+            ps.setDate(7, dt_soum);
+            ps.setDate(8, dt_conf  );
+            ps.setDate(9, dt_insc);
+            ps.setString(10, th_choisi);
+            ps.setString(11, or_choisi);
+            ps.setString(12, sc_choisi);
+            ps.execute();
+            ps.close();
             JFrame frame = new JFrame("JOptionPane showMessageDialog example");
             JOptionPane.showMessageDialog(frame,"Conference Ajoutée avec succès!");
             this.hide();
@@ -312,6 +355,7 @@ public class AddConf extends javax.swing.JFrame {
         {
             System.out.println(e);
         }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cmb_themeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_themeActionPerformed
@@ -348,20 +392,91 @@ public class AddConf extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddConf().setVisible(true);
+                try {
+                    new AddConf().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
-    public void theme(){
-        String theme="SELECT nom_theme From THEME";
+    public void theme() throws SQLException{
+         String urlPilote="oracle.jdbc.driver.OracleDriver";
+         String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+         
+            try 
+            {
+                Class.forName(urlPilote);
+            } 
+            catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         Connection con = DriverManager.getConnection(urlBD);
+         String theme="SELECT nom_theme From THEME";
         try
         {
             cmb_theme.removeAllItems();
-            stmt=cnx.ObtenirCnx().createStatement();
-            ResultSet res=stmt.executeQuery(theme);
+            PreparedStatement ps = con.prepareStatement(theme);
+            ResultSet res=ps.executeQuery();
             while (res.next()) {
-                String th=res.getString("nom_theme").toString();
+                String th=res.getString("nom_theme");
                 cmb_theme.addItem(th);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+    }
+    public void comitesc() throws SQLException{
+         String urlPilote="oracle.jdbc.driver.OracleDriver";
+         String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+         
+            try 
+            {
+                Class.forName(urlPilote);
+            } 
+            catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         Connection con = DriverManager.getConnection(urlBD);
+         String sc="SELECT * From COMITESC";
+        try
+        {
+            cmb_sc.removeAllItems();
+            PreparedStatement ps = con.prepareStatement(sc);
+            ResultSet res=ps.executeQuery();
+            while (res.next()) {
+                String th=res.getString("nom");
+                cmb_sc.addItem(th);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+    }
+    public void comiteor() throws SQLException{
+         String urlPilote="oracle.jdbc.driver.OracleDriver";
+         String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+         
+            try 
+            {
+                Class.forName(urlPilote);
+            } 
+            catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         Connection con = DriverManager.getConnection(urlBD);
+         String or="SELECT * From COMITEOR";
+        try
+        {
+            cmb_or.removeAllItems();
+            PreparedStatement ps = con.prepareStatement(or);
+            ResultSet res=ps.executeQuery();
+            while (res.next()) {
+                String th=res.getString("nom");
+                cmb_or.addItem(th);
             }
         }
         catch (SQLException e)
@@ -371,13 +486,13 @@ public class AddConf extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cmb_or;
+    private javax.swing.JComboBox cmb_sc;
     private javax.swing.JComboBox cmb_theme;
+    private com.toedter.calendar.JDateChooser date_conf;
+    private com.toedter.calendar.JDateChooser inscription;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
