@@ -1,6 +1,8 @@
 package Admin;
 import conferance.manager.ConnecterBD;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -23,6 +25,11 @@ public class Addguest extends javax.swing.JFrame {
      */
     public Addguest() {
         initComponents();
+        try {
+            Com_charge();
+        } catch (SQLException ex) {
+            Logger.getLogger(Addguest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -59,7 +66,7 @@ public class Addguest extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         idguest = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        cmb_charge = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,7 +160,7 @@ public class Addguest extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("ID:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_charge.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -193,7 +200,7 @@ public class Addguest extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(prenomGuest, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cmb_charge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(85, 85, 85))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -235,16 +242,12 @@ public class Addguest extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(nomGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(prenomGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_charge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(prenomGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -324,11 +327,37 @@ public class Addguest extends javax.swing.JFrame {
     }//GEN-LAST:event_nomGuestActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String addguest="INSERT INTO guest (id,nom,prenom,pays,presentation,vol_d,vol_a) VALUES('"+idguest.getText()+"','"+nomGuest.getText()+"','"+prenomGuest.getText()+"','"+pays.getText()+"','"+presentation.getText()+"','"+vol_d.getText()+"','"+vol_a.getText()+"')";
+        String addguest="INSERT INTO guest (id,nom,prenom,pays,presentation,institut,vol_d,depart,vol_a,arrivee,charge) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                
         try
         {
-            stmt=cnx.ObtenirCnx().createStatement();
-            stmt.executeQuery(addguest);
+            String urlPilote="oracle.jdbc.driver.OracleDriver";
+            String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+            Date dt_A = new Date(arrive.getDate().getTime());
+            Date dt_D = new Date(depart.getDate().getTime());
+            String chargé_choisi=(String) cmb_charge.getSelectedItem();
+            
+            try {
+                Class.forName(urlPilote);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Connection con = DriverManager.getConnection(urlBD);
+            
+            PreparedStatement ps = con.prepareStatement(addguest);
+            ps.setString(1,idguest.getText() );
+            ps.setString(2,nomGuest.getText() );
+            ps.setString(3,prenomGuest.getText() );
+            ps.setString(4,pays.getText() );
+            ps.setString(5,presentation.getText());
+            ps.setString(6, InstitutGuest.getText());
+            ps.setString(7,vol_d.getText() );
+            ps.setDate(8, dt_D);
+            ps.setString(9,vol_a.getText() );
+            ps.setDate(10, dt_A);
+            ps.setString(11,chargé_choisi);
+            ps.execute();
+            ps.close();
             JFrame frame = new JFrame("JOptionPane showMessageDialog example");
             JOptionPane.showMessageDialog(frame,"Conferencier Ajouté avec succès!");
             this.hide();
@@ -380,15 +409,43 @@ public class Addguest extends javax.swing.JFrame {
             }
         });
     }
+     public void Com_charge() throws SQLException{
+         String urlPilote="oracle.jdbc.driver.OracleDriver";
+         String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+         
+            try 
+            {
+                Class.forName(urlPilote);
+            } 
+            catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         Connection con = DriverManager.getConnection(urlBD);
+         String sc="SELECT * From COMITEOR";
+        try
+        {
+            cmb_charge.removeAllItems();
+            PreparedStatement ps = con.prepareStatement(sc);
+            ResultSet res=ps.executeQuery();
+            while (res.next()) {
+                String th=res.getString("nom");
+                cmb_charge.addItem(th);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField InstitutGuest;
     private com.toedter.calendar.JDateChooser arrive;
+    private javax.swing.JComboBox cmb_charge;
     private com.toedter.calendar.JDateChooser depart;
     private javax.swing.JTextField idguest;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
