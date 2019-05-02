@@ -1,3 +1,6 @@
+
+import User.Liste_Conferences;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -78,7 +81,7 @@ public class Acceuil extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Si Admin ou membre des comité:");
+        jLabel2.setText("Si Admin ou membre des comités:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -153,7 +156,9 @@ public class Acceuil extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        this.hide();
+        Liste_Conferences L = new Liste_Conferences();
+        L.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

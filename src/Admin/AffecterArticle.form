@@ -83,7 +83,7 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="185" max="-2" attributes="0"/>
-                          <Component id="jComboBox1" min="-2" pref="261" max="-2" attributes="0"/>
+                          <Component id="cmb_sc" min="-2" pref="261" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jButton2" min="-2" pref="119" max="-2" attributes="0"/>
@@ -116,7 +116,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                                  <Component id="jComboBox1" min="-2" pref="34" max="-2" attributes="0"/>
+                                  <Component id="cmb_sc" min="-2" pref="34" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
@@ -175,7 +175,7 @@
             <Property name="text" type="java.lang.String" value="Choisir un membre de comit&#xe9; scientifique :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
+        <Component class="javax.swing.JComboBox" name="cmb_sc">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="4">

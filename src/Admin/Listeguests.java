@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
 /*
@@ -20,6 +21,7 @@ import net.proteanit.sql.DbUtils;
  * @author zaefdfyjhlk
  */
 public class Listeguests extends javax.swing.JFrame {
+    String id_to_delete;
 
     /**
      * Creates new form ConsultConfirencier
@@ -27,7 +29,15 @@ public class Listeguests extends javax.swing.JFrame {
     public Listeguests() {
         initComponents();
        
+       
     }
+    public Listeguests(String code) {
+        initComponents();
+        lab_code.setText(code);
+        table_guest();
+       
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,7 +58,8 @@ public class Listeguests extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         guest_table = new javax.swing.JTable();
-        jButton6 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        lab_code = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -89,7 +100,7 @@ public class Listeguests extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Liste des Conférenciers");
 
-        jButton3.setText("Actualiser");
+        jButton3.setText("AJOUTER");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -104,6 +115,11 @@ public class Listeguests extends javax.swing.JFrame {
         });
 
         jButton5.setText("SUPPRIMER");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         guest_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -116,57 +132,65 @@ public class Listeguests extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(guest_table);
-
-        jButton6.setText("AJOUTER");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+        guest_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                guest_tableMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(guest_table);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Code Conference");
+
+        lab_code.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lab_code.setForeground(new java.awt.Color(255, 255, 255));
+        lab_code.setText("jLabel3");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)))
+                        .addComponent(jLabel1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(91, 91, 91)
+                        .addComponent(lab_code)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(67, 67, 67))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel1)
-                        .addGap(84, 84, 84)
+                        .addGap(170, 170, 170)
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6)
-                        .addGap(26, 26, 26)
+                        .addGap(49, 49, 49)
                         .addComponent(jButton4)
-                        .addGap(29, 29, 29)
+                        .addGap(46, 46, 46)
                         .addComponent(jButton5)
-                        .addGap(80, 80, 80)))
+                        .addGap(136, 136, 136))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(lab_code))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)))
                 .addComponent(jButton2)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
@@ -193,11 +217,16 @@ public class Listeguests extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        table_guest();
+        this.hide();
+        String code =lab_code.getText();
+        new Addguest(code).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        this.hide();
+        String code =lab_code.getText();
+        new Guest(code).setVisible(true);
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -206,10 +235,38 @@ public class Listeguests extends javax.swing.JFrame {
         mn.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        Addguest g= new Addguest();
-        g.setVisible(true);
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void guest_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guest_tableMouseClicked
+        /*int ligne = guest_table.getSelectedRow();
+         nom=guest_table.getModel().getValueAt(ligne, 1).toString();
+         name.setText(nom);
+         JOptionPane.showMessageDialog(null,ligne);*/
+        
+    }//GEN-LAST:event_guest_tableMouseClicked
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        int ligne = guest_table.getSelectedRow();
+        id_to_delete=guest_table.getModel().getValueAt(ligne, 0).toString();
+        String sql="DELETE from guest where id="+id_to_delete;
+        try
+        {
+            String urlPilote="oracle.jdbc.driver.OracleDriver";
+            String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+            try {
+                Class.forName(urlPilote);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Connection con = DriverManager.getConnection(urlBD);
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null,"Conferencier Supprimé!");
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,7 +304,7 @@ public class Listeguests extends javax.swing.JFrame {
     }
     public void table_guest()
     {
-        String sql="Select * FROM guest";
+        String sql="Select id,nom,prenom FROM guest WHERE conference=?";
         try
         {
             String urlPilote="oracle.jdbc.driver.OracleDriver";
@@ -260,6 +317,7 @@ public class Listeguests extends javax.swing.JFrame {
             Connection con = DriverManager.getConnection(urlBD);
             
             PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1,lab_code.getText());
             ResultSet res=ps.executeQuery();
             guest_table.setModel(DbUtils.resultSetToTableModel(res));
         }
@@ -275,11 +333,12 @@ public class Listeguests extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lab_code;
     // End of variables declaration//GEN-END:variables
 }

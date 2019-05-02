@@ -50,6 +50,7 @@ public class AddConf extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -82,15 +83,23 @@ public class AddConf extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(248, 148, 6));
 
+        jLabel13.setText("Ajouter une conférence");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(292, 292, 292)
+                .addComponent(jLabel13)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 90, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel13)
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
@@ -311,7 +320,7 @@ public class AddConf extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        String addConf="INSERT INTO conference (code,titre,local,ville,pays,frais,d_soumission,date_conf,d_paiment,theme,c_or,c_sc) "
+        String addConf="INSERT INTO conference (code,titre,local,ville,pays,frais,d_soumission,d_conf,d_inscription,theme,c_or,c_sc) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try
         {   
@@ -338,7 +347,7 @@ public class AddConf extends javax.swing.JFrame {
             ps.setString(5,txt_pays.getText());
             ps.setString(6,txt_frais.getText() );
             ps.setDate(7, dt_soum);
-            ps.setDate(8, dt_conf  );
+            ps.setDate(8, dt_conf);
             ps.setDate(9, dt_insc);
             ps.setString(10, th_choisi);
             ps.setString(11, or_choisi);
@@ -447,7 +456,7 @@ public class AddConf extends javax.swing.JFrame {
             PreparedStatement ps = con.prepareStatement(sc);
             ResultSet res=ps.executeQuery();
             while (res.next()) {
-                String th=res.getString("nom");
+                String th=res.getString("id");
                 cmb_sc.addItem(th);
             }
         }
@@ -475,7 +484,7 @@ public class AddConf extends javax.swing.JFrame {
             PreparedStatement ps = con.prepareStatement(or);
             ResultSet res=ps.executeQuery();
             while (res.next()) {
-                String th=res.getString("nom");
+                String th=res.getString("id");
                 cmb_or.addItem(th);
             }
         }
@@ -497,6 +506,7 @@ public class AddConf extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

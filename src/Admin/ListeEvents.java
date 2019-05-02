@@ -1,8 +1,14 @@
 package Admin;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,12 +21,15 @@ import java.util.logging.Logger;
  * @author zaefdfyjhlk
  */
 public class ListeEvents extends javax.swing.JFrame {
+    String code_to_delete;
+    String code_conf;
 
     /**
      * Creates new form AfficherEvent
      */
     public ListeEvents() {
         initComponents();
+        table_event();
     }
 
     /**
@@ -33,24 +42,18 @@ public class ListeEvents extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        list1 = new java.awt.List();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table_event = new javax.swing.JTable();
+        jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel3.setBackground(new java.awt.Color(44, 62, 80));
-
-        jButton1.setText("Consulter");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jButton2.setText("ANNULER");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -71,41 +74,74 @@ public class ListeEvents extends javax.swing.JFrame {
         });
 
         jButton4.setText("Supprimer");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        table_event.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        table_event.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_eventMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_event);
+
+        jButton5.setText("Consulter");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(66, 66, 66)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(93, 93, 93)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(68, 68, 68)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(72, 72, 72))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jLabel1)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(56, 56, 56)
-                        .addComponent(jButton1)
-                        .addGap(31, 31, 31)
+                        .addComponent(jLabel1)
+                        .addGap(53, 53, 53)
+                        .addComponent(jButton5)
+                        .addGap(34, 34, 34)
                         .addComponent(jButton3)
                         .addGap(31, 31, 31)
-                        .addComponent(jButton4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addComponent(jButton4))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(152, 152, 152)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(61, 61, 61))
         );
@@ -144,11 +180,6 @@ public class ListeEvents extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Event E = new Event();
-        E.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         AddConf C = null;
         try {
@@ -164,6 +195,48 @@ public class ListeEvents extends javax.swing.JFrame {
         Menu mn= new Menu();
         mn.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        int ligne = table_event.getSelectedRow();
+        code_to_delete=table_event.getModel().getValueAt(ligne, 0).toString();
+        String sql="DELETE from CONFERENCE where code="+code_to_delete;
+        try
+        {
+            String urlPilote="oracle.jdbc.driver.OracleDriver";
+            String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+            try {
+                Class.forName(urlPilote);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Connection con = DriverManager.getConnection(urlBD);
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null,"Conference Supprimée!");
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void table_eventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_eventMouseClicked
+        int row = table_event.getSelectedRow();
+        code_conf=table_event.getModel().getValueAt(row, 0).toString();
+    }//GEN-LAST:event_table_eventMouseClicked
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.hide();
+        Event E = null;
+        try {
+            E = new Event(code_conf);
+        } catch (SQLException ex) {
+            Logger.getLogger(ListeEvents.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        E.setVisible(true);
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,15 +272,40 @@ public class ListeEvents extends javax.swing.JFrame {
             }
         });
     }
+    public void table_event()
+    {
+        String sql="Select code,titre FROM conference";
+        try
+        {
+            String urlPilote="oracle.jdbc.driver.OracleDriver";
+            String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+            try {
+                Class.forName(urlPilote);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Connection con = DriverManager.getConnection(urlBD);
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet res=ps.executeQuery();
+            table_event.setModel(DbUtils.resultSetToTableModel(res));
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e);
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private java.awt.List list1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable table_event;
     // End of variables declaration//GEN-END:variables
 }

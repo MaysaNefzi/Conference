@@ -10,12 +10,12 @@ package User;
  *
  * @author amine
  */
-public class AfficherArticle_Accepter extends javax.swing.JFrame {
+public class Liste_Articles_Acceptés extends javax.swing.JFrame {
 
     /**
      * Creates new form AfficherArticle_Accepter
      */
-    public AfficherArticle_Accepter() {
+    public Liste_Articles_Acceptés() {
         initComponents();
     }
 
@@ -170,20 +170,20 @@ public class AfficherArticle_Accepter extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AfficherArticle_Accepter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Liste_Articles_Acceptés.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AfficherArticle_Accepter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Liste_Articles_Acceptés.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AfficherArticle_Accepter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Liste_Articles_Acceptés.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AfficherArticle_Accepter.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Liste_Articles_Acceptés.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AfficherArticle_Accepter().setVisible(true);
+                new Liste_Articles_Acceptés().setVisible(true);
             }
         });
     }

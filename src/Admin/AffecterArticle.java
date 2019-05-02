@@ -1,5 +1,13 @@
 package Admin;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,8 +23,9 @@ public class AffecterArticle extends javax.swing.JFrame {
     /**
      * Creates new form AffectéArticle
      */
-    public AffecterArticle() {
+    public AffecterArticle() throws SQLException {
         initComponents();
+        comitesc();
     }
 
     /**
@@ -35,7 +44,7 @@ public class AffecterArticle extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        cmb_sc = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,7 +83,7 @@ public class AffecterArticle extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Choisir un membre de comité scientifique :");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_sc.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -87,7 +96,7 @@ public class AffecterArticle extends javax.swing.JFrame {
                         .addComponent(jLabel12))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(185, 185, 185)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmb_sc, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(113, 113, 113)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -113,7 +122,7 @@ public class AffecterArticle extends javax.swing.JFrame {
                                 .addComponent(jButton1))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(37, 37, 37)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cmb_sc, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(46, 46, 46))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -182,16 +191,48 @@ public class AffecterArticle extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AffecterArticle().setVisible(true);
+                try {
+                    new AffecterArticle().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AffecterArticle.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
+    public void comitesc() throws SQLException{
+         String urlPilote="oracle.jdbc.driver.OracleDriver";
+         String urlBD="jdbc:oracle:thin:testuser/testuser@localhost";
+         
+            try 
+            {
+                Class.forName(urlPilote);
+            } 
+            catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddConf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         Connection con = DriverManager.getConnection(urlBD);
+         String sc="SELECT * From COMITESC";
+        try
+        {
+            cmb_sc.removeAllItems();
+            PreparedStatement ps = con.prepareStatement(sc);
+            ResultSet res=ps.executeQuery();
+            while (res.next()) {
+                String th=res.getString("id");
+                cmb_sc.addItem(th);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cmb_sc;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JPanel jPanel2;
